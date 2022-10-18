@@ -88,47 +88,94 @@ void BubleSort_Sq(SqList *L) {
 }
 
 int LocateElem_Sq(SqList *L, ElemType e){
-	int i = 1;
+	int i = 0;
 	ElemType *p = &(L -> elem[0]);
 	
 	while(i < L -> length){
-		if(*p++ <= e){
+		if(*p < e){
 			++i;
+		}else if (*p == e){
+			return i;
 		}else{
-			break;
+			return -1;
 		}
+		p++;
 	}
-	return i;
+	if (i >= L -> length){
+		return -1;
+	}
 }
 
 int GetElem_Sq(SqList *L, int i) {
-	return L -> elem[i-1];
+	return L -> elem[i];
+}
+
+void MergeList_Sq(SqList *La, SqList Lb){
+	int La_len, Lb_len;
+	ElemType e;
+	
+	La_len = La -> length;
+	Lb_len = Lb.length;
+
+	for(int i = 0; i < Lb_len; i++){
+		e = GetElem_Sq(&Lb, i);
+		if (LocateElem_Sq(La, e) == -1){
+			ListInsert_Sq(La, La_len, e);
+		}
+	}
 }
 
 void main(){
-	SqList L;
-	InitList_Sq(&L);
-	printf("初始化后, 当前顺序表大小为: %d; 长度为: %d\n", L.listsize, L.length);
+	SqList La;
+	InitList_Sq(&La);
 	srand((unsigned)time(NULL));
+	int randInt = 0;
 	for (int i = 0; i < 10; i++){
-		ListInsert_Sq(&L, 1, rand() % 100);
-	}
-	
-	BubleSort_Sq(&L);
-	printf("情况如下: \n");
-	for(int i = 0; i <= L.length - 1; i++){
-		printf("%d: %d\n", i+1, L.elem[i]);
-	}
-
-	int DeleteIndex;
-	while (1) {
-		printf("请输入要删除的元素下标: ");
-		scanf("%d", &DeleteIndex);
-		DeleteInsert_Sq(&L, DeleteIndex);
-		printf("删除后: \n");
-		for(int i = 0; i <= L.length - 1; i++){
-			printf("%d: %d\n", i+1, L.elem[i]);
+		randInt = rand() % 100;
+		if (LocateElem_Sq(&La, randInt) == -1){
+			ListInsert_Sq(&La, La.length+1, randInt);
 		}
 	}
+	
+	BubleSort_Sq(&La);
+	printf("初始化La后, 当前顺序表大小为: %d; 长度为: %d\n", La.listsize, La.length);
+	printf("情况如下: \n");
+	for(int i = 0; i <= La.length - 1; i++){
+		printf("%d: %d\n", i, La.elem[i]);
+	}
 
+	//int DeleteIndex;
+	//while (1) {
+	//	printf("请输入要删除的元素下标: ");
+	//	scanf("%d", &DeleteIndex);
+	//	DeleteInsert_Sq(&L, DeleteIndex);
+	//	printf("删除后: \n");
+	//	for(int i = 0; i <= L.length - 1; i++){
+	//		printf("%d: %d\n", i+1, L.elem[i]);
+	//	}
+	//}
+	
+	// 初始化Lb
+	SqList Lb;
+	InitList_Sq(&Lb);
+	for (int i = 0; i < 10; i++){
+		randInt = rand() % 100;
+		if (LocateElem_Sq(&Lb, randInt) == -1){
+			ListInsert_Sq(&Lb, Lb.length+1, rand() % 100);
+		}
+	}
+	BubleSort_Sq(&Lb);
+	printf("初始化Lb后, 当前顺序表大小为: %d; 长度为: %d\n", Lb.listsize, Lb.length);
+	printf("情况如下: \n");
+	for(int i = 0; i <= Lb.length - 1; i++){
+		printf("%d: %d\n", i, Lb.elem[i]);
+	}
+
+	MergeList_Sq(&La, Lb);
+	BubleSort_Sq(&La);
+	printf("合并La、Lb后情况如下: \n");
+	printf("长度：%d\n", La.length);
+	for(int i = 0; i < La.length; i++){
+		printf("%d: %d\n", i, La.elem[i]);
+	}
 }
