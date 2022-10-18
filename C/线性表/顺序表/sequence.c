@@ -73,6 +73,38 @@ Status DeleteInsert_Sq(SqList *L, int i) {
 	return OK;
 }
 
+void BubleSort_Sq(SqList *L) {
+	int length = L -> length - 1;
+	int swapVar;
+	for (int i = 0; i < length; i++){
+		for (int j = 0; j < length - i; j++){
+			if(L -> elem[j] > L -> elem[j+1]){
+				swapVar = L -> elem[j];
+				L -> elem[j] = L -> elem[j+1];
+				L -> elem[j+1] = swapVar;	
+			}
+		}
+	}	
+}
+
+int LocateElem_Sq(SqList *L, ElemType e){
+	int i = 1;
+	ElemType *p = &(L -> elem[0]);
+	
+	while(i < L -> length){
+		if(*p++ <= e){
+			++i;
+		}else{
+			break;
+		}
+	}
+	return i;
+}
+
+int GetElem_Sq(SqList *L, int i) {
+	return L -> elem[i-1];
+}
+
 void main(){
 	SqList L;
 	InitList_Sq(&L);
@@ -82,6 +114,7 @@ void main(){
 		ListInsert_Sq(&L, 1, rand() % 100);
 	}
 	
+	BubleSort_Sq(&L);
 	printf("情况如下: \n");
 	for(int i = 0; i <= L.length - 1; i++){
 		printf("%d: %d\n", i+1, L.elem[i]);
@@ -97,4 +130,5 @@ void main(){
 			printf("%d: %d\n", i+1, L.elem[i]);
 		}
 	}
+
 }
