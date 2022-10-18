@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "self_defination.h"
 
 #define LIST_INIT_SIZE 100
@@ -26,6 +27,7 @@ Status InitList_Sq(SqList *L) {
 Status ListInsert_Sq(SqList *L, int i, ElemType e) {
 	ElemType *q;
 
+	// 参数校验
 	if (i < 1 || i > L -> length + 1) {
 		return ERROR;
 	}
@@ -50,19 +52,49 @@ Status ListInsert_Sq(SqList *L, int i, ElemType e) {
 	return OK;
 }
 
+Status DeleteInsert_Sq(SqList *L, int i) {
+	// 参数校验
+	if (i < 1 || i > L -> length + 1)	{
+		return ERROR;
+	}
+	// 长度判断
+	if (L -> length == 0) {
+		return ERROR;
+	}
+
+	// 1. 元素前移
+	ElemType *q = &(L -> elem[i-1]);
+	ElemType *p = &(L -> elem[L -> length - 1]);
+	for (; q <= p; q++){
+		*(q) = *(q+1);
+	}
+	--(L -> length);
+
+	return OK;
+}
+
 void main(){
 	SqList L;
 	InitList_Sq(&L);
-	printf("初始化后, 当前顺序表长度为: %d\n", L.listsize);
-	ListInsert_Sq(&L, 1, 10);
-	ListInsert_Sq(&L, 2, 20);
-	ListInsert_Sq(&L, 3, 30);
-	ListInsert_Sq(&L, 4, 40);
-	ListInsert_Sq(&L, 5, 50);
-
-	printf("长度: %d\n", L.length);
-
+	printf("初始化后, 当前顺序表大小为: %d; 长度为: %d\n", L.listsize, L.length);
+	srand((unsigned)time(NULL));
+	for (int i = 0; i < 10; i++){
+		ListInsert_Sq(&L, 1, rand() % 100);
+	}
+	
+	printf("情况如下: \n");
 	for(int i = 0; i <= L.length - 1; i++){
-		printf("%d\n", L.elem[i]);
+		printf("%d: %d\n", i+1, L.elem[i]);
+	}
+
+	int DeleteIndex;
+	while (1) {
+		printf("请输入要删除的元素下标: ");
+		scanf("%d", &DeleteIndex);
+		DeleteInsert_Sq(&L, DeleteIndex);
+		printf("删除后: \n");
+		for(int i = 0; i <= L.length - 1; i++){
+			printf("%d: %d\n", i+1, L.elem[i]);
+		}
 	}
 }
