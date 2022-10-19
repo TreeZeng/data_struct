@@ -92,18 +92,14 @@ int LocateElem_Sq(SqList *L, ElemType e){
 	ElemType *p = &(L -> elem[0]);
 	
 	while(i < L -> length){
-		if(*p < e){
+		if(*p != e){
 			++i;
-		}else if (*p == e){
-			return i;
+			++p;
 		}else{
-			return -1;
+			return i;
 		}
-		p++;
 	}
-	if (i >= L -> length){
-		return -1;
-	}
+	return -1;
 }
 
 int GetElem_Sq(SqList *L, int i) {
@@ -161,7 +157,7 @@ void main(){
 	for (int i = 0; i < 10; i++){
 		randInt = rand() % 100;
 		if (LocateElem_Sq(&Lb, randInt) == -1){
-			ListInsert_Sq(&Lb, Lb.length+1, rand() % 100);
+			ListInsert_Sq(&Lb, Lb.length+1, randInt);
 		}
 	}
 	BubleSort_Sq(&Lb);
@@ -178,4 +174,5 @@ void main(){
 	for(int i = 0; i < La.length; i++){
 		printf("%d: %d\n", i, La.elem[i]);
 	}
+
 }
